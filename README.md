@@ -1,4 +1,5 @@
 # WickrIO Bot Framework
+[![npm version](https://badge.fury.io/js/wickrbot.svg)](https://badge.fury.io/js/wickrbot) ![Github CI](https://github.com/WickrInc/wickrio-bot-framework/workflows/Node.js%20CI/badge.svg)
 
 Node.js library for interacting with the WickrIO addon. This was created as an alternative to https://github.com/WickrInc/wickrio-bot-api.
 
