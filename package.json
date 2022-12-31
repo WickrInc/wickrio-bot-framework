@@ -8,7 +8,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha test -c"
+    "test": "mocha test -c",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix"
   },
   "repository": {
     "type": "git",
@@ -16,10 +18,13 @@
   },
   "author": "David Wittman",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "mergician": "^1.0.3"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.1.2",
+    "eslint": "^8.30.0",
+    "mocha": "^10.2.0",
     "sinon": "^9.0.2"
   }
 }
