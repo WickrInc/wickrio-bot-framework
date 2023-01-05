@@ -67,6 +67,7 @@ describe('wickr-bot', function() {
       bot.listen('foo', () => {}, {description: 'flub a wixby in the marzipan'})
       bot.listen('bar', () => {})
       bot.listen('baz', () => {})
+      bot.listen('secretCommand', () => {}, {hidden: true})
 
       bot.send = sinon.spy()
       bot.sendHelp({vgroupid: 'deadbeef123'})
