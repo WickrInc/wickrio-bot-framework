@@ -7,6 +7,7 @@ class FakeWickr {
     throw new Error('key not found')
   }
   cmdAddRoom() {}
+  cmdLeaveRoom() {}
   cmdDeleteRoom() {}
   cmdModifyRoom() {}
   cmdGetRoom() {}

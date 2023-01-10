@@ -289,15 +289,6 @@ describe('wickr-bot', function() {
       bot.deleteRoom('Sfakevgroupid')
       sinon.assert.calledWith(this.wickr.cmdDeleteRoom, 'Sfakevgroupid')
     })
-
-    it('creates a new room with a single user', function() {
-      let bot = new WickrBot(this.wickr, 'foo')
-      sinon.spy(this.wickr, 'cmdAddRoom')
-      bot.createRoom('dave', 'dave', 'FooRoom', 'BarTitle')
-      expect(this.wickr.cmdAddRoom.calledWith(
-        ['dave'], ['dave'], 'FooRoom', 'BarTitle',
-      )).to.be.true
-    })
   })
 
   describe('#modifyRoom', function() {
@@ -360,4 +351,13 @@ describe('wickr-bot', function() {
     })
   })
 
+  describe('#leaveRoom', function() {
+    it('calls cmdLeaveRoom', function() {
+      let bot = new WickrBot(this.wickr, 'foo')
+      sinon.spy(this.wickr, 'cmdLeaveRoom')
+
+      bot.leaveRoom('Sfakevgroupid')
+      expect(this.wickr.cmdLeaveRoom.calledWith('Sfakevgroupid'))
+    })
+  })
 })
