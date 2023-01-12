@@ -1,6 +1,6 @@
 {
   "name": "wickrbot",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Framework for WickrIO bots",
   "main": "lib/bot.js",
   "directories": {
