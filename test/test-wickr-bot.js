@@ -249,7 +249,10 @@ describe('wickr-bot', function() {
       sinon.spy(this.wickr, 'cmdSend1to1Message')
 
       bot.sendToUser('alice', 'ohai!')
-      expect(this.wickr.cmdSend1to1Message.calledWith(['alice'], 'ohai!')).to.be.true
+      sinon.assert.calledOnceWithExactly(
+        this.wickr.cmdSend1to1Message,
+        ['alice'], 'ohai!', '', '', '', [], '',
+      )
     })
 
     it('sends to multiple users', function() {
@@ -257,7 +260,71 @@ describe('wickr-bot', function() {
       sinon.spy(this.wickr, 'cmdSend1to1Message')
 
       bot.sendToUser(['alice', 'bob', 'chris', 'dave'], 'ohai!')
-      expect(this.wickr.cmdSend1to1Message.calledWith(['alice', 'bob', 'chris', 'dave'], 'ohai!')).to.be.true
+      sinon.assert.calledOnceWithExactly(
+        this.wickr.cmdSend1to1Message,
+        ['alice', 'bob', 'chris', 'dave'],
+        'ohai!',
+        '', '', '', [], '',
+      )
+    })
+
+    it('sends a message to a user with metadata', function() {
+      let bot = new WickrBot(this.wickr, 'foo')
+      sinon.spy(this.wickr, 'cmdSend1to1Message')
+
+      const meta = {
+        buttons: [
+          {
+            type: 'message',
+            text: 'Click Me',
+            message: '/action',
+          },
+        ],
+      }
+
+      bot.sendToUser(['alice', 'bob', 'chris', 'dave'], 'ohai!', { meta })
+      sinon.assert.calledOnceWithExactly(
+        this.wickr.cmdSend1to1Message,
+        ['alice', 'bob', 'chris', 'dave'],
+        'ohai!',
+        '', '', '', [], JSON.stringify(meta),
+      )
+    })
+  })
+
+  describe('#send', function() {
+    it('sends a message to a room', function() {
+      let bot = new WickrBot(this.wickr, 'foo')
+      sinon.spy(this.wickr, 'cmdSendRoomMessage')
+
+      bot.send('Sfakevgroupid', 'ohai!')
+      sinon.assert.calledOnceWithExactly(
+        this.wickr.cmdSendRoomMessage,
+        'Sfakevgroupid', 'ohai!', '', '', '', [], '',
+      )
+    })
+
+    it('sends a message to a room with metadata', function() {
+      let bot = new WickrBot(this.wickr, 'foo')
+      sinon.spy(this.wickr, 'cmdSendRoomMessage')
+
+      const meta = {
+        buttons: [
+          {
+            type: 'message',
+            text: 'Click Me',
+            message: '/action',
+          },
+        ],
+      }
+
+      bot.send('Sfakevgroupid', 'ohai!', { meta })
+      sinon.assert.calledOnceWithExactly(
+        this.wickr.cmdSendRoomMessage,
+        'Sfakevgroupid',
+        'ohai!',
+        '', '', '', [], JSON.stringify(meta),
+      )
     })
   })
 

@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha test -c",
+    "test": "nyc mocha test -c",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix"
   },
@@ -25,6 +25,7 @@
     "chai": "^4.2.0",
     "eslint": "^8.30.0",
     "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
     "sinon": "^9.0.2"
   }
 }
