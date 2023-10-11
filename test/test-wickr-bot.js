@@ -33,6 +33,17 @@ describe('wickr-bot', function() {
     expect(spyFn.calledWith(JSON.parse(fakeMsg), ['bar', 'baz'])).to.be.true
   })
 
+  it('creates a default listener', function() {
+    let fakeMsg = '{"msgtype": 1000, "message": "hey what\'s up?"}'
+    let spyFn = sinon.spy()
+    let bot = new WickrBot(this.wickr, 'foo')
+
+    bot.setDefaultHandler(spyFn)
+    bot.handleMessage()(fakeMsg)
+
+    expect(spyFn.calledWith(JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])).to.be.true
+  })
+
   describe('#handleMessage', function() {
     it('catches errors thrown in handlers', function() {
       let fakeMsg = '{"msgtype": 1000, "message": "/foo@fake-bot"}'
@@ -143,20 +154,21 @@ describe('wickr-bot', function() {
       expect(msg).to.eql({command: 'subscribe', args: ['foo', 'bar', 'baz']})
     })
 
-    it('returns null for unrecognized messages', function() {
+    it('returns just the arguments for unrecognized messages', function() {
       let bot = new WickrBot(this.wickr, 'foo')
       let messages = [
-        'omg hi becky',
-        '¯\\_(ツ)_/¯',
-        '//ohai',
-        '```\n/foo bar',
-        'eicaighooduuh5uwuy7Die0quies4ahsh6Goiyung8cae9Poopheemoyae9Ni2',
-        'bob@example.com',
+        { input: 'omg hi becky', expected: ['omg', 'hi', 'becky'] },
+        { input: '¯\\_(ツ)_/¯', expected: ['¯\\_(ツ)_/¯'] },
+        { input: '//ohai', expected: ['//ohai'] },
+        { input: '```\n/foo bar', expected: ['```', '/foo', 'bar'] },
+        { input: 'eicaighooduuh5uwuy7Die0quies4ahsh6Goiyung8cae9Poopheemoyae9Ni2', expected: ['eicaighooduuh5uwuy7Die0quies4ahsh6Goiyung8cae9Poopheemoyae9Ni2']},
+        { input: 'bob@example.com', expected: ['bob@example.com'] },
       ]
 
       messages.forEach(m => {
-        let msg = bot._parseMessage(m)
-        expect(msg).to.be.null
+        let msg = bot._parseMessage(m.input)
+        expect(msg.command).to.be.undefined
+        expect(msg.args).to.eql(m.expected)
       })
     })
   })
