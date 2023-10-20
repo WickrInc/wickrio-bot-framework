@@ -15,6 +15,7 @@ class FakeWickr {
   cmdStartAsyncRecvMessages() {}
   cmdSendRoomMessage() {}
   cmdSend1to1Message() {}
+  cmdSetAvatar() {}
   isConnected() {}
 }
 

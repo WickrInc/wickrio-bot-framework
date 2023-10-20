@@ -439,4 +439,24 @@ describe('wickr-bot', function() {
       expect(this.wickr.cmdLeaveRoom.calledWith('Sfakevgroupid'))
     })
   })
+
+  describe('#setAvatar', function() {
+    it('calls cmdSetAvatar', function() {
+      let bot = new WickrBot(this.wickr, 'foo')
+      const avatar = __dirname + '/fixtures/1x1.png'
+      sinon.spy(this.wickr, 'cmdSetAvatar')
+
+      bot.setAvatar(avatar)
+      sinon.assert.calledWith(this.wickr.cmdSetAvatar, avatar)
+    })
+
+    it('throws an error when the avatar path does not exist', function() {
+      let fn = () => {
+        const bot = new WickrBot(this.wickr, 'foo')
+        bot.setAvatar('lol.png')
+      }
+
+      expect(fn).to.throw(/File lol.png not found/)
+    })
+  })
 })
