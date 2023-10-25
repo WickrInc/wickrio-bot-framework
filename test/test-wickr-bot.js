@@ -4,7 +4,7 @@ const sinon = require('sinon')
 const FakeWickr = require('./fakes/wickr')
 const WickrBot = require('../lib/bot')
 
-describe('wickr-bot', function() {
+describe('WickrBot', function() {
   beforeEach(function() {
     this.wickr = new FakeWickr()
   })
@@ -33,7 +33,7 @@ describe('wickr-bot', function() {
     expect(spyFn.calledWith(JSON.parse(fakeMsg), ['bar', 'baz'])).to.be.true
   })
 
-  it('creates a default listener', function() {
+  it('sets a default listener', function() {
     let fakeMsg = '{"msgtype": 1000, "message": "hey what\'s up?"}'
     let spyFn = sinon.spy()
     let bot = new WickrBot(this.wickr, 'foo')
@@ -42,6 +42,17 @@ describe('wickr-bot', function() {
     bot.handleMessage()(fakeMsg)
 
     expect(spyFn.calledWith(JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])).to.be.true
+  })
+
+  it('sets a file listener', function() {
+    let fakeMsg = '{"msgtype": 6000}'
+    let spyFn = sinon.spy()
+    let bot = new WickrBot(this.wickr, 'foo')
+
+    bot.setFileHandler(spyFn)
+    bot.handleMessage()(fakeMsg)
+
+    expect(spyFn.calledWith(JSON.parse(fakeMsg))).to.be.true
   })
 
   describe('#handleMessage', function() {
