@@ -7,6 +7,9 @@
     "lib": "lib",
     "test": "test"
   },
+  "files": [
+    "lib/**"
+  ],
   "scripts": {
     "test": "nyc mocha test -c",
     "lint": "eslint . --ext .js",
