@@ -19,7 +19,8 @@ describe('WickrBot', function() {
     sinon.spy(this.wickr, 'clientInit')
     let bot = new WickrBot(this.wickr, 'foo')
     bot.start()
-    expect(this.wickr.clientInit.calledWith('foo')).to.be.true
+
+    sinon.assert.calledOnceWithExactly(this.wickr.clientInit, 'foo')
   })
 
   it('creates a listener and calls its handler on a message', function() {
@@ -30,29 +31,7 @@ describe('WickrBot', function() {
     bot.listen('foo', spyFn)
     bot.handleMessage()(fakeMsg)
 
-    expect(spyFn.calledWith(JSON.parse(fakeMsg), ['bar', 'baz'])).to.be.true
-  })
-
-  it('sets a default listener', function() {
-    let fakeMsg = '{"msgtype": 1000, "message": "hey what\'s up?"}'
-    let spyFn = sinon.spy()
-    let bot = new WickrBot(this.wickr, 'foo')
-
-    bot.setDefaultHandler(spyFn)
-    bot.handleMessage()(fakeMsg)
-
-    expect(spyFn.calledWith(JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])).to.be.true
-  })
-
-  it('sets a file listener', function() {
-    let fakeMsg = '{"msgtype": 6000}'
-    let spyFn = sinon.spy()
-    let bot = new WickrBot(this.wickr, 'foo')
-
-    bot.setFileHandler(spyFn)
-    bot.handleMessage()(fakeMsg)
-
-    expect(spyFn.calledWith(JSON.parse(fakeMsg))).to.be.true
+    sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), ['bar', 'baz'])
   })
 
   describe('#handleMessage', function() {
@@ -72,6 +51,52 @@ describe('WickrBot', function() {
       let bot = new WickrBot(this.wickr, 'foo')
 
       bot.handleMessage()(fakeMsg)
+    })
+
+    it('calls the default listener for non-slash command messages', function() {
+      let fakeMsg = '{"msgtype": 1000, "message": "hey what\'s up?"}'
+      let spyFn = sinon.spy()
+      let bot = new WickrBot(this.wickr, 'foo')
+
+      bot.setDefaultHandler(spyFn)
+      bot.handleMessage()(fakeMsg)
+
+      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])
+    })
+
+    it('calls the file handler for files', function() {
+      let fakeMsg = '{"msgtype": 6000}'
+      let spyFn = sinon.spy()
+      let bot = new WickrBot(this.wickr, 'foo')
+
+      bot.setFileHandler(spyFn)
+      bot.handleMessage()(fakeMsg)
+
+      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
+    })
+
+    it('calls the default handler for any message type', function() {
+      let fakeMsg = '{"msgtype": 666}'
+      let spyFn = sinon.spy()
+      let bot = new WickrBot(this.wickr, 'foo')
+
+      bot.setDefaultHandler(spyFn)
+      bot.handleMessage()(fakeMsg)
+
+      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
+    })
+
+    it('prefers the file handler over the default handler for file type messages', function() {
+      let fakeMsg = '{"msgtype": 6000}'
+      let [spyFn, spyFnDefault] = [sinon.spy(), sinon.spy()]
+      let bot = new WickrBot(this.wickr, 'foo')
+
+      bot.setFileHandler(spyFn)
+      bot.setDefaultHandler(spyFnDefault)
+      bot.handleMessage()(fakeMsg)
+
+      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
+      sinon.assert.notCalled(spyFnDefault)
     })
   })
 
