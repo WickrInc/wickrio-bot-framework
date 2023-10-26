@@ -19,7 +19,8 @@ describe('WickrBot', function() {
     sinon.spy(this.wickr, 'clientInit')
     let bot = new WickrBot(this.wickr, 'foo')
     bot.start()
-    expect(this.wickr.clientInit.calledWith('foo')).to.be.true
+
+    sinon.assert.calledOnceWithExactly(this.wickr.clientInit, 'foo')
   })
 
   it('creates a listener and calls its handler on a message', function() {
@@ -30,7 +31,7 @@ describe('WickrBot', function() {
     bot.listen('foo', spyFn)
     bot.handleMessage()(fakeMsg)
 
-    expect(spyFn.calledWith(JSON.parse(fakeMsg), ['bar', 'baz'])).to.be.true
+    sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), ['bar', 'baz'])
   })
 
   it('sets a default listener', function() {
@@ -41,7 +42,7 @@ describe('WickrBot', function() {
     bot.setDefaultHandler(spyFn)
     bot.handleMessage()(fakeMsg)
 
-    expect(spyFn.calledWith(JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])).to.be.true
+    sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])
   })
 
   it('sets a file listener', function() {
@@ -52,7 +53,7 @@ describe('WickrBot', function() {
     bot.setFileHandler(spyFn)
     bot.handleMessage()(fakeMsg)
 
-    expect(spyFn.calledWith(JSON.parse(fakeMsg))).to.be.true
+    sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
   })
 
   describe('#handleMessage', function() {
