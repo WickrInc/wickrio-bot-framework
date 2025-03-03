@@ -3,12 +3,14 @@
   "version": "0.3.1",
   "description": "Framework for WickrIO bots",
   "main": "lib/bot.js",
+  "types": "types/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "test"
   },
   "files": [
-    "lib/**"
+    "lib/**",
+    "types/**"
   ],
   "scripts": {
     "test": "nyc mocha test -c",

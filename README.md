@@ -5,7 +5,9 @@ Node.js library for interacting with the WickrIO addon. This was created as an a
 
 ## Quickstart
 
-``` javascript
+### JavaScript
+
+```javascript
 const WickrBot = require('wickrbot')
 const wickr = require('wickrio_addon')
 
@@ -26,9 +28,38 @@ const milkbot = new MilkBot(wickr)
 milkbot.start()
 ```
 
+### TypeScript
+
+```typescript
+import { WickrBot, WickrMessage } from 'wickrbot';
+// You'll need to import the wickrio_addon separately
+import * as wickr from 'wickrio_addon';
+
+class MilkBot extends WickrBot {
+  constructor(wickr: any, username?: string) {
+    super(wickr, username);
+    // This will create a new command for /order
+    this.listen('order', (msg: WickrMessage, args?: string[]) => {
+      // args is an array of all values passed to the command
+      let quantity = args?.[1];
+      this.orderMilk(quantity);
+      this.send(msg.vgroupid, "Okay... I ordered some milk!");
+    });
+  }
+
+  private orderMilk(quantity?: string): void {
+    // Implementation details
+    console.log(`Ordering ${quantity || 'some'} milk`);
+  }
+}
+
+const milkbot = new MilkBot(wickr);
+milkbot.start();
+```
+
 Or try the [Wickr Bot Cookiecutter template](https://github.com/WickrInc/cookiecutter-wickr-bot):
 
-```
+```bash
 cookiecutter gh:WickrInc/cookiecutter-wickr-bot
 ```
 
@@ -43,7 +74,7 @@ Use `npm version [patch|minor|major]` to update the version in package.json and 
 This software is distributed under the [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ```
-   Copyright 2021 Wickr, Inc.
+   Copyright 2025 Wickr, Inc.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
