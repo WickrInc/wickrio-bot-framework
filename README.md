@@ -31,12 +31,12 @@ milkbot.start()
 ### TypeScript
 
 ```typescript
-import { WickrBot, WickrMessage } from 'wickrbot';
+import WickrBot, { WickrAPI, WickrMessage } from 'wickrbot';
 // You'll need to import the wickrio_addon separately
 import * as wickr from 'wickrio_addon';
 
 class MilkBot extends WickrBot {
-  constructor(wickr: any, username?: string) {
+  constructor(wickr: WickrAPI, username?: string) {
     super(wickr, username);
     // This will create a new command for /order
     this.listen('order', (msg: WickrMessage, args?: string[]) => {
