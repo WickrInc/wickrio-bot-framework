@@ -31,7 +31,7 @@ describe('WickrBot', function() {
     bot.listen('foo', spyFn)
     bot.handleMessage()(fakeMsg)
 
-    sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), ['bar', 'baz'])
+    sinon.assert.calledOnceWithMatch(spyFn, JSON.parse(fakeMsg), ['bar', 'baz'])
   })
 
   describe('#handleMessage', function() {
@@ -53,6 +53,26 @@ describe('WickrBot', function() {
       bot.handleMessage()(fakeMsg)
     })
 
+    it('sets the `is_room` field to `true` on messages sent to a room', function() {
+      let fakeMsg = '{"msgtype": 1000, "message": "/foo@fake-bot bar baz"}'
+      let spyFn = sinon.spy()
+      let bot = new WickrBot(this.wickr, 'foo')
+
+      bot.listen('foo', spyFn)
+      bot.handleMessage()(fakeMsg)
+      sinon.assert.calledOnceWithExactly(spyFn, { is_room: true, ...JSON.parse(fakeMsg) }, ['bar', 'baz'])
+    })
+
+    it('sets the `is_room` field to `false` on messages sent in a 1:1', function() {
+      let fakeMsg = '{"msgtype": 1000, "receiver": "bob", "message": "/foo@fake-bot bar baz"}'
+      let spyFn = sinon.spy()
+      let bot = new WickrBot(this.wickr, 'foo')
+
+      bot.listen('foo', spyFn)
+      bot.handleMessage()(fakeMsg)
+      sinon.assert.calledOnceWithExactly(spyFn, { is_room: false, ...JSON.parse(fakeMsg) }, ['bar', 'baz'])
+    })
+
     it('calls the default listener for non-slash command messages', function() {
       let fakeMsg = '{"msgtype": 1000, "message": "hey what\'s up?"}'
       let spyFn = sinon.spy()
@@ -61,7 +81,7 @@ describe('WickrBot', function() {
       bot.setDefaultHandler(spyFn)
       bot.handleMessage()(fakeMsg)
 
-      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])
+      sinon.assert.calledOnceWithMatch(spyFn, JSON.parse(fakeMsg), ['hey', 'what\'s', 'up?'])
     })
 
     it('calls the file handler for files', function() {
@@ -72,7 +92,7 @@ describe('WickrBot', function() {
       bot.setFileHandler(spyFn)
       bot.handleMessage()(fakeMsg)
 
-      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
+      sinon.assert.calledOnceWithMatch(spyFn, JSON.parse(fakeMsg), undefined)
     })
 
     it('calls the default handler for any message type', function() {
@@ -83,7 +103,7 @@ describe('WickrBot', function() {
       bot.setDefaultHandler(spyFn)
       bot.handleMessage()(fakeMsg)
 
-      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
+      sinon.assert.calledOnceWithMatch(spyFn, JSON.parse(fakeMsg), undefined)
     })
 
     it('prefers the file handler over the default handler for file type messages', function() {
@@ -95,7 +115,7 @@ describe('WickrBot', function() {
       bot.setDefaultHandler(spyFnDefault)
       bot.handleMessage()(fakeMsg)
 
-      sinon.assert.calledOnceWithExactly(spyFn, JSON.parse(fakeMsg), undefined)
+      sinon.assert.calledOnceWithMatch(spyFn, JSON.parse(fakeMsg), undefined)
       sinon.assert.notCalled(spyFnDefault)
     })
   })

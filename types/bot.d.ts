@@ -28,6 +28,11 @@ export interface WickrMessage {
   message_id: string
 
   /**
+   * Indicates if the message is a part of a room (true) or a direct message (false)
+   */
+  is_room: boolean
+
+  /**
    * Wickr ID of the user who sent the message
    */
   sender: string
@@ -46,6 +51,16 @@ export interface WickrMessage {
    * The time the message was sent with microsecond accuracy (e.g. "1510777143.738976")
    */
   msg_ts: string
+
+  /**
+   * Displayable time message was sent.
+   */
+  time: string
+
+  /**
+   * The time the message was sent in ISO format (YYYY-MM-DD hh:mm:ss.xxx)
+   */
+  time_iso: string
 
   /**
    * For file message types, this contains details about the file
