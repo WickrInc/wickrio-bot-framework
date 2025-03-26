@@ -93,6 +93,11 @@ export interface FileAttachment {
    * The time the file was uploaded
    */
   uploadedtimestamp: string
+
+  /**
+   * Whether or not the uploaded file is a screenshot taken in the Wickr app
+   */
+  isscreenshot?: boolean
 }
 
 /**
